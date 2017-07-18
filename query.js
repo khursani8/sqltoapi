@@ -1,6 +1,6 @@
 var Search
 
-var busSearch = `
+var searchBus = `
 SELECT SUM(bus_time), e.bus_location, e.bus_no , e.RouteStart, e.RouteEnd FROM (
 SELECT r.route_id,  r.current_stop ,r.route_start,r.route_end, r.next_stop, r.bus_time, c.current_position,b.bus_location,b.bus_no, l1.location_name as "RouteStart",l2.location_name as "RouteEnd"
 FROM route r 
@@ -14,10 +14,10 @@ LEFT JOIN location l2
 ON l2.location_position = r.route_end
 where c.client_id = 5 /*  */
 ) AS e 
-WHERE e.bus_no = "T304" and e.route_id = 1 and not e.current_stop in (0)`
+WHERE e.bus_no = ? and e.route_id = 1 and not e.current_stop in (0);
+`
 
-var information = `
-select b.bus_no, locstart.location_name as "Current Stop", r.bus_time,locend.location_name as "Next Stop"
+var information = `select b.bus_no, locstart.location_name as "Current Stop", r.bus_time,locend.location_name as "Next Stop"
 FROM route r
 LEFT JOIN bus b
 on b.bus_route = r.route_id
@@ -31,6 +31,6 @@ where b.bus_no = "T304" and r.route_id = 1;
 
 
 module.exports = {
-  busSearch,
+  searchBus,
   information
 }
