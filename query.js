@@ -25,7 +25,7 @@ LEFT JOIN location locstart
 on locstart.location_position = r.current_stop
 LEFT JOIN location locend
 on locend.location_position = r.next_stop
-where b.bus_no = "T304" and r.route_id = 1;
+where b.bus_no = ? and r.route_id = 1;
 `
 
 
