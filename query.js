@@ -17,7 +17,7 @@ where c.client_id = 5 /*  */
 WHERE e.bus_no = ? and e.route_id = 1 and not e.current_stop in (0);
 `
 
-var information = `select b.bus_no, locstart.location_name as "Current Stop", r.bus_time,locend.location_name as "Next Stop"
+var information = `select b.bus_no, locstart.location_name as "current_Stop", r.bus_time,locend.location_name as "next_Stop"
 FROM route r
 LEFT JOIN bus b
 on b.bus_route = r.route_id
