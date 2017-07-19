@@ -1,4 +1,7 @@
-var Search
+var busNo = `
+select bus_no from bus
+group by bus_no;
+`
 
 var searchBus = `
 SELECT SUM(bus_time) as est, e.bus_location, e.bus_no , e.RouteStart, e.RouteEnd FROM (
@@ -32,5 +35,6 @@ where b.bus_no = ? and r.route_id = 1;
 
 module.exports = {
   searchBus,
-  information
+  information,
+  busNo
 }
