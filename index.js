@@ -25,6 +25,13 @@ app.listen(8000,function(){
   console.log('http://localhost:8000')
 });
 
+app.get('/listBus',function(req,res){
+  connection.query(query.busNo,function(err,results,field){
+    if(err) throw err;
+    res.send(results)
+})
+})
+
 app.get('/searchBus/:id',function(req,res){
   connection.query(query.searchBus,[req.params.id],function(err,results,field){
     if(err) throw err;
