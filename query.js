@@ -1,5 +1,5 @@
 var busNo = `
-select bus_no from bus
+select bus_no as label from bus
 group by bus_no;
 `
 

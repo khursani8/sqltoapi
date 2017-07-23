@@ -28,6 +28,7 @@ app.listen(8000,function(){
 app.get('/listBus',function(req,res){
   connection.query(query.busNo,function(err,results,field){
     if(err) throw err;
+    console.log(results[0]);
     res.send(results)
 })
 })
