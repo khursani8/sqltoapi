@@ -33,6 +33,14 @@ app.get('/listBus',function(req,res){
 })
 })
 
+app.get('/listStation',function(req,res){
+  connection.query(query.listStation,function(err,results,field){
+    if(err) throw err;
+    console.log(results[0]);
+    res.send(results)
+})
+})
+
 app.get('/searchBus/:id',function(req,res){
   connection.query(query.searchBus,[req.params.id],function(err,results,field){
     if(err) throw err;
