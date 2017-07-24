@@ -41,6 +41,14 @@ app.get('/listStation',function(req,res){
 })
 })
 
+app.get('/getLatLong/:location_name',function(req,res){
+  connection.query(query.getLatLong,[req.params.location_name],function(err,results,field){
+    if(err) throw err;
+    console.log(results[0]);
+    res.send(results)
+})
+})
+
 app.get('/searchBus/:id',function(req,res){
   connection.query(query.searchBus,[req.params.id],function(err,results,field){
     if(err) throw err;

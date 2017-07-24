@@ -7,6 +7,10 @@ var listStation = `
 select location_name from location
 `
 
+var getLatLong = `
+select latitude,longitude from location WHERE location_name=?
+`
+
 var searchBus = `
 SELECT SUM(bus_time) as est, e.bus_location, e.bus_no , e.RouteStart, e.RouteEnd FROM (
 SELECT r.route_id,  r.current_stop ,r.route_start,r.route_end, r.next_stop, r.bus_time, c.current_position,b.bus_location,b.bus_no, l1.location_name as "RouteStart",l2.location_name as "RouteEnd"
@@ -39,5 +43,6 @@ module.exports = {
   searchBus,
   information,
   busNo,
-  listStation
+  listStation,
+  getLatLong
 }
