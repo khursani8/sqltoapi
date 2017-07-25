@@ -32,7 +32,7 @@ where c.client_id = 5 /*  */
 WHERE e.bus_no = ? and e.route_id = 2 and not e.current_stop in (0);
 `
 
-var information = `select b.bus_no, locstart.location_name as "current_Stop", r.bus_time,locend.location_name as "next_Stop"
+var information = `select b.bus_no, locstart.location_name as "Current Stop", r.bus_time,locend.location_name as "Next Stop"
 FROM route r
 LEFT JOIN bus b
 on b.bus_route = r.route_id
@@ -40,7 +40,8 @@ LEFT JOIN location locstart
 on locstart.location_position = r.current_stop
 LEFT JOIN location locend
 on locend.location_position = r.next_stop
-where b.bus_no = ? and r.route_id = 1;
+where b.bus_no = ? and r.route_id = 2
+group by current_stop
 `
 
 module.exports = {
