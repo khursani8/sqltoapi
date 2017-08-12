@@ -85,6 +85,23 @@ from location
 ORDER BY distance
 LIMIT 1) as l1)
 order by client_id desc limit 1;
+
+select @LONGITUDE :=  longitude, @LATITUDE := latitude from client
+WHERE client_id=( SELECT max(client_id) FROM client); 
+
+SELECT bus_no from bus
+WHERE route_name_ IN 
+(SELECT route_name from route 
+WHERE current_stop = (SELECT location_position from location where location_name = 
+        (SELECT l1.location_name FROM (SELECT location_name, (((@LATITUDE - latitude)*(@LATITUDE - latitude)) + ((@LONGITUDE - longitude)*(@LONGITUDE - longitude))) as distance from location
+
+ORDER BY distance
+LIMIT 1) as l1)) 
+or next_stop = (SELECT location_position from location where location_name = 
+        (SELECT l1.location_name FROM (SELECT location_name, (((@LATITUDE - latitude)*(@LATITUDE - latitude)) + ((@LONGITUDE - longitude)*(@LONGITUDE - longitude))) as distance from location
+
+ORDER BY distance
+LIMIT 1) as l1)))GROUP BY bus_no;
 `
 
 var getNearestStation = `
