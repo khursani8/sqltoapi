@@ -101,16 +101,6 @@ app.get('/updateUserLocationAndgetNearestStation/',function(req,res){
 })
 })
 
-app.get('/getNearestStation/',function(req,res){
-  connection.query(query.getNearestStation,function(err,results,field){
-    if(err) throw err;
-    res.send({
-      // query:query.information,
-      res:results
-    })
-})
-})
-
 app.get('/getBusNo/',function(req,res){
   connection.query(query.getBusNo,function(err,results,field){
     if(err) throw err;
@@ -121,8 +111,8 @@ app.get('/getBusNo/',function(req,res){
 })
 })
 
-app.get('/getBus/',function(req,res){
-  connection.query(query.getBus,function(err,results,field){
+app.get('/getBus/:busno',function(req,res){
+  connection.query(query.getBus,[req.params.busno],function(err,results,field){
     if(err) throw err;
     res.send({
       // query:query.information,
