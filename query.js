@@ -144,7 +144,7 @@ LIMIT 1) as l1)))GROUP BY bus_no;
 `
 
 getBus = `
-select SUM(bus_time), l2.location_name, l3.location_name, l.location_name from route r INNER JOIN bus b ON r.route_name = b.route_name_ INNER JOIN location l 
+select SUM(bus_time), l2.location_name as RouteStart, l3.location_name as RouteEnd, l.location_name as location_name from route r INNER JOIN bus b ON r.route_name = b.route_name_ INNER JOIN location l 
 ON r.current_stop = l.location_position 
 INNER JOIN location l2 
 ON r.route_start = l2.location_position 
