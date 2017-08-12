@@ -48,17 +48,19 @@ where c.client_id = 5 /*  */
 WHERE e.bus_no = ? and e.route_id = 2 and not e.current_stop in (0);
 `
 
-var information = `select b.bus_no, locstart.location_name as "current_Stop", r.bus_time,locend.location_name as "next_Stop"
+var information = `
+select b.bus_no, locstart.location_name as "Current Stop", r.bus_time,locend.location_name as "Next Stop"
 FROM route r
 LEFT JOIN bus b
-on b.bus_route = r.route_id
+on b.route_name_ = r.route_name
 LEFT JOIN location locstart
-on locstart.location_position = r.current_stop
+on r.current_stop = locstart.location_position
 LEFT JOIN location locend
-on locend.location_position = r.next_stop
-where b.bus_no = ? and r.route_id = 2
-group by current_stop;
+ON r.next_stop = locend.location_position
+where bus_plate_no = "AJK9217" and bus_no = "AJ04" and route_name_ = "Building 2, UTP -> Chancellor Hall, UTP";
 `
+
+
 
 ////////////////////////////////USER interface/////////////////////////////////////////
 var updateUserLocation = `
@@ -76,6 +78,54 @@ as distance
 from location
 ORDER BY distance
 LIMIT 1) as l1;
+
+ALTER TABLE client;
+UPDATE client
+SET current_position = (SELECT l1.location_position FROM (SELECT location_position, (((@LATITUDE - latitude)*(@LATITUDE - latitude)) + ((@LONGITUDE - longitude)*(@LONGITUDE - longitude)))
+as distance
+from location
+ORDER BY distance
+LIMIT 1) as l1)
+order by client_id desc limit 1;
+`
+
+var getBusNo = `
+select @LONGITUDE :=  longitude, @LATITUDE := latitude from client
+WHERE client_id=( SELECT max(client_id) FROM client); 
+
+SELECT bus_no from bus
+WHERE route_name_ IN 
+(SELECT route_name from route 
+WHERE current_stop = (SELECT location_position from location where location_name = 
+        (SELECT l1.location_name FROM (SELECT location_name, (((@LATITUDE - latitude)*(@LATITUDE - latitude)) + ((@LONGITUDE - longitude)*(@LONGITUDE - longitude))) as distance from location
+
+ORDER BY distance
+LIMIT 1) as l1)) 
+or next_stop = (SELECT location_position from location where location_name = 
+        (SELECT l1.location_name FROM (SELECT location_name, (((@LATITUDE - latitude)*(@LATITUDE - latitude)) + ((@LONGITUDE - longitude)*(@LONGITUDE - longitude))) as distance from location
+
+ORDER BY distance
+LIMIT 1) as l1)))GROUP BY bus_no;
+`
+
+getBus = `
+select SUM(bus_time), l2.location_name, l3.location_name, l.location_name from route r INNER JOIN bus b ON r.route_name = b.route_name_ INNER JOIN location l ON r.current_stop = l.location_position INNER JOIN location l2 ON r.route_start = l2.location_position INNER JOIN location l3 ON r.route_end = l3.location_position where r.current_stop >= 33 and r.current_stop <= 35 and b.bus_no = "AJ04"
+`
+
+getRoute = `
+select b.bus_no, locstart.location_name as "Current Stop", r.bus_time,locend.location_name as "Next Stop"
+FROM route r
+LEFT JOIN bus b
+on b.route_name_ = r.route_name
+LEFT JOIN location locstart
+on r.current_stop = locstart.location_position
+LEFT JOIN location locend
+ON r.next_stop = locend.location_position
+where bus_plate_no = "AJK9217" and bus_no = "AJ04" and route_name_ = "Building 2, UTP -> Chancellor Hall, UTP";
+
+DELETE FROM client
+ORDER BY client_id DESC 
+LIMIT 1;
 `
 
 module.exports = {
@@ -91,5 +141,8 @@ module.exports = {
 
 
   updateUserLocation,
-  getNearestStation
+  getNearestStation,
+  getBusNo,
+  getBus,
+  getRoute
 }

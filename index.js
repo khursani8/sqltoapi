@@ -110,3 +110,33 @@ app.get('/getNearestStation/',function(req,res){
     })
 })
 })
+
+app.get('/getBusNo/',function(req,res){
+  connection.query(query.getBusNo,function(err,results,field){
+    if(err) throw err;
+    res.send({
+      // query:query.information,
+      res:results
+    })
+})
+})
+
+app.get('/getBus/',function(req,res){
+  connection.query(query.getBus,function(err,results,field){
+    if(err) throw err;
+    res.send({
+      // query:query.information,
+      res:results
+    })
+})
+})
+
+app.get('/getRoute/',function(req,res){
+  connection.query(query.getRoute,function(err,results,field){
+    if(err) throw err;
+    res.send({
+      // query:query.information,
+      res:results
+    })
+})
+})
