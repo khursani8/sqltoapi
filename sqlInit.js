@@ -5,7 +5,8 @@ var connection = mysql.createConnection({
   user     : 'root',
   password : 'root',
   database : 'bus_tracking',
-  socketPath: '/Applications/MAMP/tmp/mysql/mysql.sock'
+  // socketPath: '/Applications/MAMP/tmp/mysql/mysql.sock',
+  multipleStatements: 'true'
 });
 connection.connect();
 
