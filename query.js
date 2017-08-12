@@ -154,7 +154,7 @@ where r.current_stop >= 29 and r.current_stop <= 30 and b.bus_no = ?;
 `
 
 getRoute = `
-select b.bus_no, locstart.location_name as "current_stop", r.bus_time,locend.location_name as "next_stop"
+select b.bus_no, locstart.location_name as "Current Stop", r.bus_time,locend.location_name as "Next Stop"
 FROM route r
 LEFT JOIN bus b
 on b.route_name_ = r.route_name
@@ -162,11 +162,8 @@ LEFT JOIN location locstart
 on r.current_stop = locstart.location_position
 LEFT JOIN location locend
 ON r.next_stop = locend.location_position
-where bus_plate_no = "AJK9217" and bus_no = "AJ04" and route_name_ = "Building 2, UTP -> Chancellor Hall, UTP";
-
-DELETE FROM client
-ORDER BY client_id DESC 
-LIMIT 1;
+where bus_no = "T304" and route_name_ = "Ukay Perdana -> LRT Sri Rampai"
+GROUP BY r.stop_index;
 `
 
 module.exports = {
