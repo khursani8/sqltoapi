@@ -121,8 +121,8 @@ app.get('/getBus/:busno',function(req,res){
 })
 })
 
-app.get('/getRoute/',function(req,res){
-  connection.query(query.getRoute,function(err,results,field){
+app.get('/getRoute/:busno',function(req,res){
+  connection.query(query.getRoute,[req.params.busno],function(err,results,field){
     if(err) throw err;
     res.send({
       // query:query.information,

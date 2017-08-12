@@ -162,7 +162,7 @@ LEFT JOIN location locstart
 on r.current_stop = locstart.location_position
 LEFT JOIN location locend
 ON r.next_stop = locend.location_position
-where bus_no = "T304" and route_name_ = "Ukay Perdana -> LRT Sri Rampai"
+where bus_no = ?
 GROUP BY r.stop_index;
 `
 
