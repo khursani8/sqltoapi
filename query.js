@@ -63,10 +63,28 @@ where bus_plate_no = "AJK9217" and bus_no = "AJ04" and route_name_ = "Building 2
 
 
 ////////////////////////////////USER interface/////////////////////////////////////////
-var updateUserLocation = `
+var updateUserLocationAndGetNearestStation = `
 ALTER TABLE client AUTO_INCREMENT = 1;
 INSERT INTO client (latitude, longitude)
 VALUES (?, ?);
+
+select @LONGITUDE :=  longitude, @LATITUDE := latitude from client
+WHERE client_id=( SELECT max(client_id) FROM client); 
+
+SELECT l1.location_name FROM (SELECT location_name, (((@LATITUDE - latitude)*(@LATITUDE - latitude)) + ((@LONGITUDE - longitude)*(@LONGITUDE - longitude)))
+as distance
+from location
+ORDER BY distance
+LIMIT 1) as l1;
+
+ALTER TABLE client;
+UPDATE client
+SET current_position = (SELECT l1.location_position FROM (SELECT location_position, (((@LATITUDE - latitude)*(@LATITUDE - latitude)) + ((@LONGITUDE - longitude)*(@LONGITUDE - longitude)))
+as distance
+from location
+ORDER BY distance
+LIMIT 1) as l1)
+order by client_id desc limit 1;
 `
 
 var getNearestStation = `
@@ -140,7 +158,7 @@ module.exports = {
   listStop,
 
 
-  updateUserLocation,
+  updateUserLocationAndGetNearestStation,
   getNearestStation,
   getBusNo,
   getBus,
