@@ -93,6 +93,7 @@ app.get('/information/:id',function(req,res){
 app.get('/updateUserLocation/',function(req,res){
   connection.query(query.updateUserLocation,[req.query.latitude,req.query.longitude],function(err,results,field){
     if(err) throw err;
+    console.log(req.query);
     res.send({
       // query:query.information,
       res:results
