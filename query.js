@@ -1,6 +1,22 @@
-var busNo = `
-select bus_no as label from bus
-group by bus_no;
+var listRoute = `
+Select route_name from route
+Group By route_name;
+`
+
+var listBusNo = `
+Select bus_no from bus b
+WHERE b.route_name_ = ?
+GROUP BY bus_no;
+`
+
+var listStop = `
+Select l.location_name
+FROM route r
+INNER JOIN location l
+ON r.current_stop = l.location_position
+LEFT JOIN bus b
+ON b.route_name_= r.route_name
+WHERE r.route_name = ?;
 `
 
 var listStation = `
@@ -44,11 +60,36 @@ where b.bus_no = ? and r.route_id = 2
 group by current_stop;
 `
 
+////////////////////////////////USER interface/////////////////////////////////////////
+var updateUserLocation = `
+ALTER TABLE client AUTO_INCREMENT = 1;
+INSERT INTO client (latitude, longitude)
+VALUES (?, ?);
+`
+
+var getNearestStation = `
+select @LONGITUDE :=  longitude, @LATITUDE := latitude from client
+WHERE client_id=( SELECT max(client_id) FROM client); 
+
+SELECT l1.location_name FROM (SELECT location_name, (((@LATITUDE - latitude)*(@LATITUDE - latitude)) + ((@LONGITUDE - longitude)*(@LONGITUDE - longitude)))
+as distance
+from location
+ORDER BY distance
+LIMIT 1) as l1;
+`
+
 module.exports = {
   searchBus,
   information,
-  busNo,
   listStation,
   getLatLong,
-  getBusLoc
+  getBusLoc,
+
+  listRoute,
+  listBusNo,
+  listStop,
+
+
+  updateUserLocation,
+  getNearestStation
 }
