@@ -150,7 +150,7 @@ INNER JOIN location l2
 ON r.route_start = l2.location_position 
 INNER JOIN location l3 
 ON r.route_end = l3.location_position
-where r.current_stop >= 33 and r.current_stop <= 35 and b.bus_no = ?;
+where r.current_stop >= 29 and r.current_stop <= 30 and b.bus_no = ?;
 `
 
 getRoute = `
