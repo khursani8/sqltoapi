@@ -154,7 +154,7 @@ where r.current_stop >= 29 and r.current_stop <= 30 and b.bus_no = ?;
 `
 
 getRoute = `
-select b.bus_no, locstart.location_name as "Current Stop", r.bus_time,locend.location_name as "Next Stop"
+select b.bus_no, locstart.location_name as "current_stop", r.bus_time,locend.location_name as "next_stop"
 FROM route r
 LEFT JOIN bus b
 on b.route_name_ = r.route_name
