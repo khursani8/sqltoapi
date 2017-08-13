@@ -142,7 +142,7 @@ app.get('/getETA/', function(req, res) {
 })
 
 app.get('/insertBusPlate/:bus_plate_no', function(req, res) {
-            connection.query(query.bus_plate_no, [req.params.bus_plate_no, function(err, results, field) {
+            connection.query(query.bus_plate_no, [req.params.bus_plate_no], function(err, results, field) {
                     if (err) throw err;
                     res.send({
                         // query:query.information,
