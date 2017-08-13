@@ -195,7 +195,36 @@ getETA = `
         ) AS e 
         WHERE e.bus_no = "AJ02" and e.route_name = "Building 2, UTP -> Chancellor Hall, UTP" and e.bus_plate_no = "AJK9217" and not e.current_stop in (0);
 `
+    /////////////////////////////////////////////////////////////////////
+insertBusPlate =
+    `INSERT INTO bus (bus_plate_no, bus_no, route_name_)
+VALUES (?, ?, ?);
+`
+displayRoute =
+    `Select route_name from route
+Group By route_name;
+`
+dropDownBusNo =
+    `Select bus_no from bus b
+WHERE b.route_name_ = "Jalan Permata -> Ukay Perdana 3"
+GROUP BY bus_no;
+`
+dropDownBusStop =
+    `Select l.location_name
+FROM route r
+INNER JOIN location l 
+ON r.current_stop = l.location_position
+LEFT JOIN bus b
+ON b.route_name_= r.route_name
+WHERE b.route_name_ = "Jalan Permata -> Ukay Perdana 3" AND b.bus_no = "AJ01";
+`
+updateBusStop =
+    `UPDATE bus
+SET bus_location = 36
+WHERE bus_plate_no = "AJK9217" and bus_no = "AJ04" and route_name_ = "Building 2, UTP -> Chancellor Hall, UTP";
+`
 
+/////////////////////////////////////////////////////////////////////
 module.exports = {
     searchBus,
     information,
@@ -213,5 +242,11 @@ module.exports = {
     getBusNo,
     getBus,
     getRoute,
-    getETA
+    getETA,
+
+    insertBusPlate,
+    displayRoute,
+    dropDownBusNo,
+    dropDownBusStop,
+    updateBusStop
 }
