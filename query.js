@@ -179,7 +179,7 @@ getETA = `
         from bus
         WHERE bus_no = "AJ02" and bus_plate_no = "AJK9217") as bp);
         
-        SELECT SUM(bus_time), e.bus_location, e.bus_no , e.RouteStart, e.RouteEnd 
+        SELECT SUM(bus_time) as eta, e.bus_location, e.bus_no , e.RouteStart, e.RouteEnd 
         FROM (
         SELECT @Current_Position, @bus_position, r.route_name, b.bus_plate_no, r.current_stop ,r.route_start,r.route_end, r.next_stop, r.bus_time, c.current_position,b.bus_location,b.bus_no, l1.location_name as "RouteStart",l2.location_name as "RouteEnd"
         FROM route r 
