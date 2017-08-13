@@ -166,21 +166,52 @@ where bus_no = ?
 GROUP BY r.stop_index;
 `
 
+getETA = `
+(SELECT @Current_Position := cp.current_position from 
+        (SELECT c.current_position, l.location_name
+        FROM client c
+        INNER JOIN location l
+        ON c.current_position = l.location_position
+        WHERE c.client_id=( SELECT max(client_id) FROM client)) as cp); 
+        
+        (SELECT @bus_position := bp.bus_location from 
+        (SELECT bus_no, bus_location
+        from bus
+        WHERE bus_no = "AJ02" and bus_plate_no = "AJK9217") as bp);
+        
+        SELECT SUM(bus_time), e.bus_location, e.bus_no , e.RouteStart, e.RouteEnd 
+        FROM (
+        SELECT @Current_Position, @bus_position, r.route_name, b.bus_plate_no, r.current_stop ,r.route_start,r.route_end, r.next_stop, r.bus_time, c.current_position,b.bus_location,b.bus_no, l1.location_name as "RouteStart",l2.location_name as "RouteEnd"
+        FROM route r 
+        LEFT JOIN client c
+        ON r.next_stop <= @Current_Position
+        LEFT JOIN bus b
+        ON @bus_position <= r.current_stop and b.route_name_ = "Building 2, UTP -> Chancellor Hall, UTP"
+        LEFT JOIN location l1 
+        ON l1.location_position = r.route_start
+        LEFT JOIN location l2 
+        ON l2.location_position = r.route_end
+        where c.client_id=( SELECT max(client_id) FROM client)
+        ) AS e 
+        WHERE e.bus_no = "AJ02" and e.route_name = "Building 2, UTP -> Chancellor Hall, UTP" and e.bus_plate_no = "AJK9217" and not e.current_stop in (0);
+`
+
 module.exports = {
-  searchBus,
-  information,
-  listStation,
-  getLatLong,
-  getBusLoc,
+    searchBus,
+    information,
+    listStation,
+    getLatLong,
+    getBusLoc,
 
-  listRoute,
-  listBusNo,
-  listStop,
+    listRoute,
+    listBusNo,
+    listStop,
 
 
-  updateUserLocationAndGetNearestStation,
-  getNearestStation,
-  getBusNo,
-  getBus,
-  getRoute
+    updateUserLocationAndGetNearestStation,
+    getNearestStation,
+    getBusNo,
+    getBus,
+    getRoute,
+    getETA
 }
